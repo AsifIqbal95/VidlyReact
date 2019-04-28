@@ -1,19 +1,43 @@
 import React, { Component } from "react";
 import Like from "./common/Like";
 import TableHeader from "./common/TableHeader";
+import TableBody from "./common/TableBody";
+import { Link } from "react-router-dom";
 
 class MoviesTable extends Component {
   columns = [
-    { path: "title", label: "Title" },
+    {
+      path: "title",
+      label: "Title",
+      content: movie => <Link to={`/movies/${movie._id}`}>{movie.title}</Link>
+    },
     { path: "genre.name", label: "Genre" },
     { path: "numberInStock", label: "Stock" },
     { path: "dailyRentalRate", label: "Rate" },
-    { key: "like" },
-    { key: "delete" }
+    {
+      key: "like",
+      content: movie => (
+        <Like
+          liked={movie.liked}
+          onClick={() => this.props.likeButton(movie._id)}
+        />
+      )
+    },
+    {
+      key: "delete",
+      content: movie => (
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={() => this.props.deleteMovie(movie._id)}
+        >
+          Delete
+        </button>
+      )
+    }
   ];
 
   render() {
-    const { movies, likeButton, deleteMovie, sortColumn, sortBy } = this.props;
+    const { movies, sortColumn, sortBy } = this.props;
     return (
       <React.Fragment>
         <table className="table">
@@ -22,30 +46,7 @@ class MoviesTable extends Component {
             sortBy={sortBy}
             columns={this.columns}
           />
-          <tbody>
-            {movies.map(movie => (
-              <tr key={movie._id}>
-                <td>{movie.title}</td>
-                <td>{movie.genre.name}</td>
-                <td>{movie.numberInStock}</td>
-                <td>{movie.dailyRentalRate}</td>
-                <td>
-                  <Like
-                    liked={movie.liked}
-                    onClick={() => likeButton(movie._id)}
-                  />
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => deleteMovie(movie._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          <TableBody data={movies} columns={this.columns} />
         </table>
       </React.Fragment>
     );

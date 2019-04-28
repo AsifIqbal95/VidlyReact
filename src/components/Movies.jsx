@@ -27,11 +27,31 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
 
-  render() {
-    const genres = getGenres();
+  onPageChange = page => {
+    this.setState({ currentPage: page });
+  };
 
-    genres.push({ _id: "1", name: "All Genres" });
+  onFilterChange = genreId => {
+    this.setState({ currentPage: 1, currentGenre: genreId });
+  };
 
+  deleteMovie = MovieId => {
+    let index = this.state.movies.findIndex(movie => movie._id === MovieId);
+    this.state.movies.splice(index, 1);
+    let page =
+      this.state.movies.length === this.state.pageSize
+        ? 1
+        : this.state.currentPage;
+    this.setState({ movies: this.state.movies, currentPage: page });
+  };
+
+  likeButton = MovieId => {
+    const movie = this.state.movies.find(movie => movie._id === MovieId);
+    movie.liked = !movie.liked;
+    this.setState({ movies: this.state.movies });
+  };
+
+  getFilteredMovies() {
     let filteredMovies =
       this.state.currentGenre === "1"
         ? this.state.movies
@@ -51,6 +71,16 @@ class Movies extends Component {
       this.state.currentPage,
       this.state.pageSize
     );
+    const result = { movies, count };
+    return result;
+  }
+
+  render() {
+    const genres = getGenres();
+
+    genres.push({ _id: "1", name: "All Genres" });
+
+    const { movies, count } = this.getFilteredMovies();
 
     if (this.state.movies.length === 0) {
       return <p>There are no Movies Yet!!!</p>;
@@ -85,34 +115,6 @@ class Movies extends Component {
       </React.Fragment>
     );
   }
-
-  onPageChange = page => {
-    this.setState({ currentPage: page });
-  };
-
-  onFilterChange = genreId => {
-    this.setState({ currentPage: 1, currentGenre: genreId });
-  };
-
-  deleteMovie = MovieId => {
-    let index = this.state.movies.findIndex(movie => movie._id === MovieId);
-    this.state.movies.splice(index, 1);
-    // let page =
-    //   this.state.movies.length % 3 === 0
-    //     ? this.state.currentPage - 1
-    //     : this.state.currentPage;
-    let page =
-      this.state.movies.length === this.state.pageSize
-        ? 1
-        : this.state.currentPage;
-    this.setState({ movies: this.state.movies, currentPage: page });
-  };
-
-  likeButton = MovieId => {
-    const movie = this.state.movies.find(movie => movie._id === MovieId);
-    movie.liked = !movie.liked;
-    this.setState({ movies: this.state.movies });
-  };
 }
 
 export default Movies;
