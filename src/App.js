@@ -5,16 +5,18 @@ import NavBar from "./components/common/NavBar";
 import Customers from "./components/Customers";
 import NotFound from "./components/NotFound";
 import Rentals from "./components/Rentals";
-import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import MovieForm from "./components/movieForm";
 import Login from "./components/loginForm";
+import Register from "./components/registerForm";
 
 class App extends Component {
   routes = [
     { name: "Movies", to: "/movies" },
     { name: "Customers", to: "/customers" },
     { name: "Rentals", to: "/rentals" },
-    { name: "Login", to: "/login" }
+    { name: "Login", to: "/login" },
+    { name: "Register", to: "/register" }
   ];
 
   render() {
@@ -24,6 +26,7 @@ class App extends Component {
         <main className="container">
           <Switch>
             <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
             <Route path="/movies/:id" component={MovieForm} />
             <Route path="/movies" component={Movies} />
             <Route path="/customers" component={Customers} />

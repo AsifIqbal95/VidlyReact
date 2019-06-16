@@ -10,7 +10,7 @@ const NavBar = props => {
       <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div className="navbar-nav">
           {props.links.map(link => (
-            <NavLink className="nav-item nav-link" to={link.to}>
+            <NavLink key={link.name} className="nav-item nav-link" to={link.to}>
               {link.name}
             </NavLink>
           ))}
